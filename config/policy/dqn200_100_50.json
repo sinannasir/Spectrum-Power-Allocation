@@ -1,0 +1,24 @@
+{
+    "N_neighbors": 5,
+    "scale_R_inner": 0.75,
+    "scale_R_interf": 2.5,
+    "n_hiddens": [
+        200,
+        100,
+        50
+    ],
+    "num_actions": 8,
+    "neightresh": 2,
+    "discount_factor": 0.25,
+    "learning_rate_0": 0.0005,
+    "learning_rate_decay": 0.9999,
+    "learning_rate_min": 0.000,
+    "target_update_count": 50,
+    "time_slot_to_pass_weights": 50,
+    "max_epsilon": 0.05,
+    "epsilon_decay": 0.999,
+    "min_epsilon": 0.00,
+    "batch_size": 32,
+    "memory_per_agent": 1000,
+    "cuda": false
+}

@@ -1,0 +1,31 @@
+{
+    "simulation": {
+        "N": 100,
+        "K": 20,
+        "R_defined": 400,
+        "min_dist": 35,
+        "dcor": 10.0,
+        "shadowing_dev": 10.0,
+        "T": 0.02,
+        "total_samples": 12500,
+        "isTrain": false,
+        "test_include": "all",
+        "equal_number_for_BS": false
+    },
+    "train_episodes": {
+        "T_train": 2500,
+        "T_sleep": 0,
+        "cell_passing_training": true,
+        "cell_passing_sleeping": true,
+        "T_register": 50
+    },
+    "mobility_params": {
+        "v_c": 300000000.0,
+        "f_c": 2000000000.0,
+        "v_max": 2.5,
+        "a_max": 0.5,
+        "alpha_angle_rad": 0.175,
+        "T_mobility": 50,
+        "max_doppler": null
+    }
+}
