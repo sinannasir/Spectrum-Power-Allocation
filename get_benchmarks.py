@@ -52,10 +52,18 @@ args = parser.parse_args()
 # "test_K5_N10_M2_shadow10_episode5-1000_travel0_fd15",
 # "test_K5_N20_M4_shadow10_episode5-1000_travel0_fd15",
 # "test_K10_N20_M1_shadow10_episode5-1000_travel0_fd15"]
-json_files = ["test_K10_N20_M2_shadow10_episode5-1000_travel0_fd15",
-"test_K10_N20_M4_shadow10_episode5-1000_travel0_fd15",
-"test_K10_N50_M5_shadow10_episode5-1000_travel0_fd15",
-"test_K10_N50_M10_shadow10_episode5-1000_travel0_fd15"]
+# json_files = ["test_K10_N20_M2_shadow10_episode5-1000_travel0_fd15",
+# "test_K10_N20_M4_shadow10_episode5-1000_travel0_fd15",
+# "test_K10_N50_M5_shadow10_episode5-1000_travel0_fd15",
+# "test_K10_N50_M10_shadow10_episode5-1000_travel0_fd15"]
+
+# json_files = [  "test_K10_N50_M1_shadow10_episode10-500_travel0_fd5",
+#                 "test_K10_N50_M1_shadow10_episode10-500_travel0_fd10",
+#                 "test_K10_N50_M1_shadow10_episode10-500_travel0_fd15"]
+
+
+
+json_files = [  "test_K5_N20_M1_shadow10_episode10-500_travel0_fd10"]
 
 for json_file in json_files:
     num_sim = args.num_sim
@@ -159,8 +167,8 @@ for json_file in json_files:
                 sum_rate_FPMulti_delayedbyone.append(pb.sumrate_multi_weighted_clipped(H_all[sim],p_central,alpha_central,noise_var,weights[sim]))
                 
                 random_alpha = pb.random_alpha_full(N,M)#all_alpha_combs[np.random.randint(len(all_alpha_combs))]
-                rand_p,_ = pb.FP_algorithm_multi_knownchannel(N,random_alpha, H_all[sim], Pmax, noise_var,weights[sim])
-                sum_rate_randomCS_idealFP.append(pb.sumrate_multi_weighted_clipped(H_all[sim],rand_p,random_alpha,noise_var,weights[sim]))
+                # rand_p,_ = pb.FP_algorithm_multi_knownchannel(N,random_alpha, H_all[sim], Pmax, noise_var,weights[sim])
+                # sum_rate_randomCS_idealFP.append(pb.sumrate_multi_weighted_clipped(H_all[sim],rand_p,random_alpha,noise_var,weights[sim]))
                 
                 sum_rate_randomCS_randomP.append(pb.sumrate_multi_weighted_clipped(H_all[sim],Pmax * np.random.rand(N),random_alpha,noise_var,weights[sim]))
         else:
@@ -203,24 +211,24 @@ for json_file in json_files:
                     weights.append(np.array([1.0/i for i in average_sum_rate]))
                 if(sim%100 == 0):
                     print(sim)
-            print('get sum_rate_randomCS_idealFP')
-            for sim in range(total_samples):
-                if sim % train_episodes['T_train'] == 0: # Restart
-                    allone_alpha = np.zeros((N,M))
-                    allone_alpha[:,0] = 1
-                    rate = [1e-10+np.array(pb.sumrate_multi_list_clipped(H_all[sim],Pmax*np.ones(N),allone_alpha,noise_var))]
-                    average_sum_rate = np.array(rate[-1])
-                    weights = [np.array([1.0/i for i in average_sum_rate])]
-                    sum_rate_randomCS_idealFP.append(np.sum(np.log(average_sum_rate)))
-                else:
-                    tmp_FP_alpha = pb.random_alpha_full(N,M)
-                    tmp_FP_p,_ = pb.FP_algorithm_multi_knownchannel(N,tmp_FP_alpha, H_all[sim], Pmax, noise_var,weights[-1])
-                    rate.append(pb.sumrate_multi_list_clipped(H_all[sim],tmp_FP_p,tmp_FP_alpha,noise_var))
-                    average_sum_rate = (1.0-beta)*average_sum_rate+beta*np.array(rate[-1])
-                    sum_rate_randomCS_idealFP.append(np.sum(np.log(average_sum_rate)))
-                    weights.append(np.array([1.0/i for i in average_sum_rate]))
-                if(sim%100 == 0):
-                    print(sim)
+            # print('get sum_rate_randomCS_idealFP')
+            # for sim in range(total_samples):
+            #     if sim % train_episodes['T_train'] == 0: # Restart
+            #         allone_alpha = np.zeros((N,M))
+            #         allone_alpha[:,0] = 1
+            #         rate = [1e-10+np.array(pb.sumrate_multi_list_clipped(H_all[sim],Pmax*np.ones(N),allone_alpha,noise_var))]
+            #         average_sum_rate = np.array(rate[-1])
+            #         weights = [np.array([1.0/i for i in average_sum_rate])]
+            #         sum_rate_randomCS_idealFP.append(np.sum(np.log(average_sum_rate)))
+            #     else:
+            #         tmp_FP_alpha = pb.random_alpha_full(N,M)
+            #         tmp_FP_p,_ = pb.FP_algorithm_multi_knownchannel(N,tmp_FP_alpha, H_all[sim], Pmax, noise_var,weights[-1])
+            #         rate.append(pb.sumrate_multi_list_clipped(H_all[sim],tmp_FP_p,tmp_FP_alpha,noise_var))
+            #         average_sum_rate = (1.0-beta)*average_sum_rate+beta*np.array(rate[-1])
+            #         sum_rate_randomCS_idealFP.append(np.sum(np.log(average_sum_rate)))
+            #         weights.append(np.array([1.0/i for i in average_sum_rate]))
+            #     if(sim%100 == 0):
+            #         print(sim)
             print('get sum_rate_randomCS_randomP')
             for sim in range(total_samples):
                 if sim % train_episodes['T_train'] == 0: # Restart
@@ -241,7 +249,7 @@ for json_file in json_files:
                     print(sim)
         np_save_path = './simulations/sumrate/benchmarks/%s_network%d'%(json_file,overal_sims)
         np.savez(np_save_path,p_FP_nodelay,alpha_FP_nodelay,time_FP_nodelay,sum_rate_nodelay,
-                 sum_rate_FPMulti_delayedbyone,sum_rate_randomCS_idealFP,sum_rate_randomCS_randomP)
+                 sum_rate_FPMulti_delayedbyone,sum_rate_randomCS_randomP)
         print('Saved to %s'%(np_save_path))
 
 

@@ -481,7 +481,7 @@ class DDPG:
         # if sum(self.previous_action>0.99)==self.N:
         #     return np.random.rand()
         # # epsilon greedy algorithm
-        if np.random.rand() < self.epsilon_all[sim]:
+        if np.random.rand() < self.epsilon_all[max(500,sim)]:
             strategy = np.random.rand()
             # strategy = np.random.choice(self.strategy_translation)
             return strategy
@@ -559,7 +559,7 @@ class DDPG:
                                                               self.x_actor: s_shaped, 
                                                 self.critic_gradient: del_Q_a, self.is_train: True})
         # Train DQN
-        if len(self.DQNmemory['s']) >= self.DQNbatch_size+self.N:
+        if self.M > 1 and len(self.DQNmemory['s']) >= self.DQNbatch_size+self.N:
             # Minus N ensures that experience samples from previous timeslots been used
             idx = np.random.randint(len(self.DQNmemory['rewards'])-self.N,size=self.DQNbatch_size)
             c_QNN_outputs = sess.run(self.DQNQNN_target, feed_dict={self.DQNx_policy: np.array(self.DQNmemory['s_prime'])[idx, :].reshape(self.DQNbatch_size,self.DQNnum_input),

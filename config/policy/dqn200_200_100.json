@@ -16,9 +16,9 @@
     "target_update_count": 50,
     "time_slot_to_pass_weights": 50,
     "max_epsilon": 0.05,
-    "epsilon_decay": 0.999,
-    "min_epsilon": 0.00,
-    "batch_size": 32,
-    "memory_per_agent": 1000,
+    "epsilon_decay": 0.9995,
+    "min_epsilon": 0.001,
+    "batch_size": 128,
+    "memory_per_agent": 500,
     "cuda": false
 }

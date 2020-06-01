@@ -17,15 +17,15 @@ parser.add_argument('--json-file', type=str, default='test_K20_N40_shadow10_epis
                    help='json file for the deployment the policies are tested on')
 parser.add_argument('--json-file-train', type=str, default='train_K10_N20_shadow10_episode10-5000_travel50000_vmax2_5',
                    help='json file for the deployment that the policy is trained on')
-parser.add_argument('--json-file-PA-train', type=str, default='ddpg200_100_50',
-                    help='json file for the hyperparameters')
-parser.add_argument('--json-file-CS-train', type=str, default='dqn100_50_50',
-                    help='json file for the hyperparameters')
+# parser.add_argument('--json-file-PA-train', type=str, default='ddpg200_100_50',
+#                     help='json file for the hyperparameters')
+# parser.add_argument('--json-file-CS-train', type=str, default='dqn100_50_50',
+#                     help='json file for the hyperparameters')
 
-# parser.add_argument('--json-file-PA-train', type=str, default='dqn200_200_100',
-#                     help='json file for the hyperparameters')
-# parser.add_argument('--json-file-CS-train', type=str, default='dqn200_200_100',
-#                     help='json file for the hyperparameters')
+parser.add_argument('--json-file-PA-train', type=str, default='dqn200_200_100',
+                    help='json file for the hyperparameters')
+parser.add_argument('--json-file-CS-train', type=str, default='dqn200_200_100',
+                    help='json file for the hyperparameters')
 
 parser.add_argument('--plot', type=bool, default=False,
                    help='if set to false will not plot anything, just printout the results.')
@@ -51,11 +51,28 @@ scenario['plot'] = True
 # json_file = "test_K5_N10_M1_shadow10_episode5-1000_travel0_fd15"
 # json_files_train = ["train_K5_N10_M1_shadow10_episode1-25000_travel0_fd15"]
 
-json_file = "test_K5_N20_M4_shadow10_episode5-1000_travel0_fd5"
-json_file_train = "train_K5_N20_M4_shadow10_episode1-25000_travel0_fd5"
+# json_file = "test_K5_N20_M4_shadow10_episode5-1000_travel0_fd5"
+# json_file_train = "train_K5_N20_M4_shadow10_episode1-25000_travel0_fd5"
 
 # json_file = "test_K5_N20_M4_shadow10_episode5-1000_travel0_fd15"
 # json_file_train = "train_K5_N20_M4_shadow10_episode1-25000_travel0_fd15"
+
+
+# json_file = "test_K10_N50_M1_shadow10_episode10-500_travel0_fd5"
+# json_file_train = "train_K10_N50_M1_shadow10_episode5-5000_travelIND_fd5"
+
+# json_file = "test_K10_N50_M1_shadow10_episode10-500_travel0_fd15"
+# json_file_train = "train_K10_N50_M1_shadow10_episode5-5000_travelIND_fd15"
+
+# json_file = "test_K10_N50_M5_shadow10_episode5-1000_travel0_fd15"
+# json_file_train = "train_K10_N50_M5_shadow10_episode5-5000_travelIND_fd15"
+
+
+# json_file = "test_K10_N50_M10_shadow10_episode5-1000_travel0_fd5"
+# json_file_train = "train_K10_N50_M10_shadow10_episode5-5000_travelIND_fd5"
+
+json_file = "test_K5_N20_M1_shadow10_episode10-500_travel0_fd10"
+json_file_train = "train_K5_N20_M1_shadow10_episode5-5000_travelIND_fd10"
 
 json_file_policy_train = args.json_file_PA_train
 json_file_policy_CS_train = args.json_file_CS_train
@@ -109,7 +126,7 @@ sum_rate_FP     = data['arr_3']
 
 sum_rate_FPMulti_delayedbyone          = data['arr_4']
 sum_rate_simrandomCS_idealFP         = data['arr_5']
-sum_rate_simrandomCS_randomP            = data['arr_6']
+sum_rate_simrandomCS_randomP            = data['arr_5']
 
 
 

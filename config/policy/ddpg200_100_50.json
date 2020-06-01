@@ -12,7 +12,7 @@
     "learning_rate_0_critic": 0.005,
     "learning_rate_decay_critic": 0.9995,
     "learning_rate_min_critic": 0.0000,
-    "learning_rate_0_actor": 0.001,
+    "learning_rate_0_actor": 0.0005,
     "learning_rate_decay_actor": 0.9995,
     "learning_rate_min_actor": 0.0000,
     "target_update_count": 50,

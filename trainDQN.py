@@ -43,8 +43,19 @@ json_file = args.json_file
 # json_file = "train_K10_N50_M5_shadow10_episode1-25000_travel0_fd5"
 # json_file = "train_K10_N50_M5_shadow10_episode1-25000_travel0_fd15"
 
-json_file = "train_K10_N50_M5_shadow10_episode5-5000_travelIND_fd5"
+# json_file = "train_K10_N50_M5_shadow10_episode5-5000_travelIND_fd5"
 # json_file = "train_K10_N50_M5_shadow10_episode5-5000_travelIND_fd15"
+
+# json_file = "train_K10_N50_M1_shadow10_episode5-5000_travelIND_fd5"
+# json_file = "train_K10_N50_M1_shadow10_episode5-5000_travelIND_fd15"
+
+
+
+
+
+# json_file = "train_K5_N20_M1_shadow10_episode5-5000_travelIND_fd10"
+json_file = "train_K5_N20_M2_shadow10_episode5-5000_travelIND_fd10"
+
 
 json_file_policy = args.json_file_policy
 num_sim = args.num_sim
@@ -122,33 +133,33 @@ for overal_sims in range(simulation,simulation+num_simulations):
     policy = DQN.DQN(options,options_policy,N,M,Pmax,noise_var,seed=100+overal_sims)
 
     ## Our JSAC version uses a linear quantizer.
-    strategy_translation = np.zeros(policy.power_levels)
-    strategy_translation[0] = 0.0 # Tx power 0
-    # Calculate steps in dBm
-    strategy_translation_dB_step = Pmax_dB/(policy.power_levels-1)
-    for i in range(1,policy.power_levels-1):
-        strategy_translation[i] = i *(Pmax/(policy.power_levels-1))
-    strategy_translation[-1] = Pmax
-    #        
-    #        
-    #    strategy_translation = np.zeros(policy.power_levels)
-    #    strategy_translation[0] = 0.0 # Tx power 0
-    #    Pmin_dB = 5.0-30
-    #    Pmin = np.power(10.0,Pmin_dB/10)
-    #    strategy_translation[0] = 0.0 # Tx power 0
-    #    strategy_translation[1] = Pmin # Tx power 1
-    #    for i in range(2,policy.power_levels-1):
-    #        strategy_translation[i] = Pmin * ((Pmax/Pmin) ** ((i-1.0)/(policy.power_levels-2)))
-    #    strategy_translation[-1] = Pmax
-    ## Replaced it with a dB step quantizer.
     # strategy_translation = np.zeros(policy.power_levels)
     # strategy_translation[0] = 0.0 # Tx power 0
-    # Pmin_dB = 10.0-30
     # # Calculate steps in dBm
-    # strategy_translation_dB_step = (Pmax_dB-Pmin_dB)/(policy.power_levels-2)
+    # strategy_translation_dB_step = Pmax_dB/(policy.power_levels-1)
     # for i in range(1,policy.power_levels-1):
-    #     strategy_translation[i] = np.power(10.0,((Pmin_dB+(i-1)*strategy_translation_dB_step))/10)
+    #     strategy_translation[i] = i *(Pmax/(policy.power_levels-1))
     # strategy_translation[-1] = Pmax
+    #        
+    #        
+    strategy_translation = np.zeros(policy.power_levels)
+    strategy_translation[0] = 0.0 # Tx power 0
+    Pmin_dB = 5.0-30
+    Pmin = np.power(10.0,Pmin_dB/10)
+    strategy_translation[0] = 0.0 # Tx power 0
+    strategy_translation[1] = Pmin # Tx power 1
+    for i in range(2,policy.power_levels-1):
+        strategy_translation[i] = Pmin * ((Pmax/Pmin) ** ((i-1.0)/(policy.power_levels-2)))
+    strategy_translation[-1] = Pmax
+    ## Replaced it with a dB step quantizer.
+    strategy_translation = np.zeros(policy.power_levels)
+    strategy_translation[0] = 0.0 # Tx power 0
+    Pmin_dB = 10.0-30
+    # Calculate steps in dBm
+    strategy_translation_dB_step = (Pmax_dB-Pmin_dB)/(policy.power_levels-2)
+    for i in range(1,policy.power_levels-1):
+        strategy_translation[i] = np.power(10.0,((Pmin_dB+(i-1)*strategy_translation_dB_step))/10)
+    strategy_translation[-1] = Pmax
    
     # Start the simulation 2
     # Sum rate for the simulation 1

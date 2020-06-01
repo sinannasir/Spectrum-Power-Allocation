@@ -57,6 +57,16 @@ args = parser.parse_args()
 # json_file = "test_K10_N50_M5_shadow10_episode5-1000_travel0_fd15"
 # json_file = "test_K10_N50_M10_shadow10_episode5-1000_travel0_fd15"
 
+# json_file = "test_K10_N50_M1_shadow10_episode10-500_travel0_fd5"
+# json_file = "test_K10_N50_M1_shadow10_episode10-500_travel0_fd10"
+# json_file = "test_K10_N50_M1_shadow10_episode10-500_travel0_fd15"
+
+
+# json_file = "test_K5_N20_M1_shadow10_episode10-500_travel0_fd10"
+
+# json_file = "train_K5_N20_M1_shadow10_episode5-5000_travelIND_fd10"
+json_file = "train_K5_N20_M2_shadow10_episode5-5000_travelIND_fd10"
+# json_file = "train_K10_N50_M5_shadow10_episode5-5000_travelIND_fd10"
 
 # json_file = "train_K5_N10_M1_shadow10_episode1-25000_travel0_fd5"
 # json_file = "train_K5_N20_M4_shadow10_episode1-25000_travel0_fd5"
@@ -68,7 +78,13 @@ args = parser.parse_args()
 
 
 # json_file = "train_K10_N50_M5_shadow10_episode5-5000_travelIND_fd5"
-json_file = "train_K10_N50_M5_shadow10_episode5-5000_travelIND_fd15"
+# json_file = "train_K10_N50_M5_shadow10_episode5-5000_travelIND_fd15"
+
+# json_file = "train_K10_N50_M10_shadow10_episode5-5000_travelIND_fd5"
+# json_file = "train_K10_N50_M10_shadow10_episode5-5000_travelIND_fd15"
+
+# json_file = "train_K10_N50_M1_shadow10_episode5-5000_travelIND_fd5"
+# json_file = "train_K10_N50_M1_shadow10_episode5-5000_travelIND_fd15"
 
 num_sim = args.num_sim
 with open ('./config/deployment/'+json_file+'.json','r') as f:
