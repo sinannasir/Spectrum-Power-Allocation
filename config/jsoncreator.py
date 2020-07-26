@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@author: sinannasir
+@author: anonymous
 """
 
 import json

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@author: sinannasir
+@author: anonymous
 """
 
 import numpy as np
@@ -8,64 +8,12 @@ import project_backend as pb
 import json
 import argparse
 
-json_file = "train_K10_N20_shadow10_episode2-5000_travel50000_vmax2_5" 
-json_file = "train_K10_N20_shadow10_episode10-5000_travel50000_vmax2_5" 
-json_file = "train_K10_N20_shadow10_episode10-5000_travel0_fd10" 
+
+def main(args):
+    
+    json_file = args.json_file
 
 
-json_file = "test_N10_K20_shadow10_episode5-2500_travel0_vmax2_5_"
-json_file = "test_N20_K40_shadow10_episode5-2500_travel0_vmax2_5" 
-json_file = "test_N20_K60_shadow10_episode5-2500_travel0_vmax2_5_" 
-json_file = "test_N20_K80_shadow10_episode5-2500_travel0_vmax2_5" 
-json_file = "test_N20_K100_shadow10_episode5-2500_travel0_vmax2_5" 
-json_file = "train_N10_K20_shadow10_episode5-5000_travel20000_vmax2_5"
-json_file = "train_N5_K20_shadow10_episode1-5000_travel0_vmax2_5"  
-
-parser = argparse.ArgumentParser(description='give test scenarios.')
-# parser.add_argument('--json-file', type=str, default='train_K10_N20_M4_shadow10_episode1-5000_travel50000_vmax2_5',
-#                    help='json file for the deployment')
-# parser.add_argument('--json-file', type=str, default='train_K5_N20_M5_shadow10_episode1-5000_travel0_fd10_pfs',
-#                     help='json file for the deployment')
-# parser.add_argument('--json-file', type=str, default='train_K5_N10_M1_shadow10_episode1-5000_travel0_fd10_pfs',
-#                     help='json file for the deployment')
-# parser.add_argument('--json-file', type=str, default='train_K5_N20_M5_shadow10_episode1-5000_travel0_fd10_pfs',
-#                     help='json file for the deployment')
-parser.add_argument('--json-file', type=str, default='train_K5_N20_M1_shadow10_episode1-5000_travel0_fd10_pfs',
-                   help='json file for the deployment')
-parser.add_argument('--num-sim', type=int, default=0,
-                   help='If set to -1, it uses num_simulations of the json file. If set to positive, it runs one simulation with the given id.')
-
-args = parser.parse_args()
-
-# def main(args):
-
-# json_file = args.json_file
-# json_files = ["test_K5_N10_M1_shadow10_episode5-1000_travel0_fd5",
-# "test_K5_N10_M2_shadow10_episode5-1000_travel0_fd5",
-# "test_K5_N20_M4_shadow10_episode5-1000_travel0_fd5",
-# "test_K10_N20_M1_shadow10_episode5-1000_travel0_fd5"]
-# json_files = ["test_K10_N20_M2_shadow10_episode5-1000_travel0_fd5",
-# "test_K10_N20_M4_shadow10_episode5-1000_travel0_fd5",
-# "test_K10_N50_M5_shadow10_episode5-1000_travel0_fd5",
-# "test_K10_N50_M10_shadow10_episode5-1000_travel0_fd5"]
-# json_files =["test_K5_N10_M1_shadow10_episode5-1000_travel0_fd15",
-# "test_K5_N10_M2_shadow10_episode5-1000_travel0_fd15",
-# "test_K5_N20_M4_shadow10_episode5-1000_travel0_fd15",
-# "test_K10_N20_M1_shadow10_episode5-1000_travel0_fd15"]
-# json_files = ["test_K10_N20_M2_shadow10_episode5-1000_travel0_fd15",
-# "test_K10_N20_M4_shadow10_episode5-1000_travel0_fd15",
-# "test_K10_N50_M5_shadow10_episode5-1000_travel0_fd15",
-# "test_K10_N50_M10_shadow10_episode5-1000_travel0_fd15"]
-
-# json_files = [  "test_K10_N50_M1_shadow10_episode10-500_travel0_fd5",
-#                 "test_K10_N50_M1_shadow10_episode10-500_travel0_fd10",
-#                 "test_K10_N50_M1_shadow10_episode10-500_travel0_fd15"]
-
-
-
-json_files = [  "test_K5_N20_M1_shadow10_episode10-500_travel0_fd10"]
-
-for json_file in json_files:
     num_sim = args.num_sim
     
     with open ('./config/deployment/'+json_file+'.json','r') as f:
@@ -132,7 +80,6 @@ for json_file in json_files:
         # Sum rate
         sum_rate_nodelay = []
         sum_rate_FPMulti_delayedbyone = []
-        sum_rate_randomCS_idealFP = []
         sum_rate_randomCS_randomP = []
         if not pfs:
             weights = []
@@ -254,26 +201,17 @@ for json_file in json_files:
 
 
 
-# if __name__ == "__main__": 
+if __name__ == "__main__": 
+    
+    parser = argparse.ArgumentParser(description='give test scenarios.')
 
-#     json_file = "train_K10_N20_shadow10_episode2-5000_travel50000_vmax2_5" 
-#     json_file = "train_K10_N20_shadow10_episode10-5000_travel50000_vmax2_5" 
-#     json_file = "train_K10_N20_shadow10_episode10-5000_travel0_fd10" 
+    parser.add_argument('--json-file', type=str, default='test_K5_N20_M1_shadow10_episode10-500_travel0_fd10',
+                       help='json file for the deployment')
+    parser.add_argument('--num-sim', type=int, default=0,
+                       help='If set to -1, it uses num_simulations of the json file. If set to positive, it runs one simulation with the given id.')
+    
+    args = parser.parse_args()
+
+    main(args)
     
     
-#     json_file = "test_N10_K20_shadow10_episode5-2500_travel0_vmax2_5_"
-#     json_file = "test_N20_K40_shadow10_episode5-2500_travel0_vmax2_5" 
-#     json_file = "test_N20_K60_shadow10_episode5-2500_travel0_vmax2_5_" 
-#     json_file = "test_N20_K80_shadow10_episode5-2500_travel0_vmax2_5" 
-#     json_file = "test_N20_K100_shadow10_episode5-2500_travel0_vmax2_5" 
-#     json_file = "train_N10_K20_shadow10_episode5-5000_travel20000_vmax2_5"
-#     json_file = "train_N5_K20_shadow10_episode1-5000_travel0_vmax2_5"  
-    
-#     parser = argparse.ArgumentParser(description='give test scenarios.')
-#     parser.add_argument('--json-file', type=str, default='train_K10_N20_shadow10_episode5-5000_travel50000_vmax2_5',
-#                        help='json file for the deployment')
-#     parser.add_argument('--num-sim', type=int, default=-1,
-#                        help='If set to -1, it uses num_simulations of the json file. If set to positive, it runs one simulation with the given id.')
-    
-#     args = parser.parse_args()
-#     main(args)

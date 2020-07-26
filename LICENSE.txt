@@ -1,6 +1,6 @@
 The MIT License
 
-Copyright (c) 2020 Yasar Sinan Nasir
+Copyright (c) 2020 Anonymous Submission
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

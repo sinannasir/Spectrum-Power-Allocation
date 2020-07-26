@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@author: sinannasir
+@author: anonymous
 """
 import numpy as np
 import time
@@ -115,19 +115,35 @@ def reward_helper(H,p,alpha,noise_var,Pmax):
             sum_rate[loop,loop,m]=(np.log2(1+np.minimum(treshold_sinr,tmp_1/tmp_2)))
     return sum_rate
 
+# def permute_alphas(N,M):
+#     alphas = []
+#     for n in range(M+1):
+#         tmp = np.zeros((N,M))
+#         if n!= M: tmp[0,n] = 1
+#         alphas.append(np.array(tmp))
+#     for k in range(1,N):
+#         tmp_alphas = []
+#         for tmp in alphas:
+#             for n in range(M+1):
+#                 if n!= M: tmp[k,n] = 1
+#                 tmp_alphas.append(np.array(tmp))
+#                 if n!= M: tmp[k,n] = 0
+#         alphas = tmp_alphas
+#     return alphas
+
 def permute_alphas(N,M):
     alphas = []
-    for n in range(M+1):
+    for n in range(M):
         tmp = np.zeros((N,M))
-        if n!= M: tmp[0,n] = 1
+        tmp[0,n] = 1
         alphas.append(np.array(tmp))
     for k in range(1,N):
         tmp_alphas = []
         for tmp in alphas:
-            for n in range(M+1):
-                if n!= M: tmp[k,n] = 1
+            for n in range(M):
+                tmp[k,n] = 1
                 tmp_alphas.append(np.array(tmp))
-                if n!= M: tmp[k,n] = 0
+                tmp[k,n] = 0
         alphas = tmp_alphas
     return alphas
 

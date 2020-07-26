@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-@author: sinannasir
+@author: anonymous
 """
 import numpy as np
 #import matplotlib.pyplot as plt
@@ -465,34 +465,18 @@ class DDPG:
             
     def PAact(self,sess,current_local_state,sim,forcezero=False):
         # for stability
-        # if (sim < 500 or forcezero) and np.random.rand() < 0.1:
-        #     return np.random.rand()
-
         if forcezero and np.random.rand() < self.epsilon_all[0]:
-            return np.random.rand()
-        
-        # if (sum(self.previous_action>0.98)==self.N or sum(self.previous_action<0.02)==self.N) and np.random.rand() < (self.M)/self.N:
-        #     return np.random.rand()
-
-        # if (sum(self.previous_action>0.98)==self.N or sum(self.previous_action<0.2)==self.N) and np.random.rand() < (self.M)/self.N:
-        #     print('aa')
-        #     return np.random.rand()
-        
-        # if sum(self.previous_action>0.99)==self.N:
-        #     return np.random.rand()
-        # # epsilon greedy algorithm
-        if np.random.rand() < self.epsilon_all[max(500,sim)]:
-            strategy = np.random.rand()
-            # strategy = np.random.choice(self.strategy_translation)
-            return strategy
-        
-        # strategy = sess.run(self.actor_agent, feed_dict={self.x_actor_agent: current_local_state.reshape(1,self.DDPGnum_input), self.is_train: False})[0][0]
+            return np.random.rand()        
+        if sim < 500:
+            if np.random.rand() < self.epsilon_all[0]:
+                strategy = np.random.rand()
+                return strategy
+        else:
+            if np.random.rand() < self.epsilon_all[sim]:
+                strategy = np.random.rand()
+                return strategy
         strategy = sess.run(self.actor_agent, feed_dict={self.x_actor_agent: current_local_state.reshape(1,self.DDPGnum_input), self.is_train: False})[0][0]
-        # strategy_noise = strategy + self.Pmax * 0.01*np.random.randn()
-        # while strategy_noise < 0 or strategy_noise > 1:
-        #     strategy_noise = strategy + self.Pmax * 0.01*np.random.randn()
-        
-        #strategy = min(1.0,max(0.0,strategy + 0.001*np.random.randn()))
+
         return strategy#_noise
     
     def PAact_noepsilon(self,sess,current_local_state,sim):
@@ -673,128 +657,4 @@ class DDPG:
         return state
     
     
-    # def local_state_singlechannel(self,sim,agent,m,alpha_strategy_all,alpha_strategy_int_all,p_strategy_all,H_all_2,sum_rate_list_distributed_policy,weights):
-    #     state = np.zeros(self.DQNnum_input // self.M)
-    #     state[0] = alpha_strategy_all[-1][agent,m]* p_strategy_all[-1][agent]
-    #     state[1] = np.log10(H_all_2[sim][agent,agent,m]/self.scale_gain)
-    #     state[2] = np.log10(H_all_2[sim-1][agent,agent,m]/self.scale_gain)
-    #     if(len(np.where(np.delete(alpha_strategy_all[-1][:,m]*p_strategy_all[-1],agent)==0)[0])!=self.N-1):
-    #         state[3] = np.log10((self.noise_var+np.matmul(np.delete(H_all_2[sim][agent,:,m],agent),
-    #                                         np.delete(alpha_strategy_all[-1][:,m]*p_strategy_all[-1],agent)))/(self.scale_gain))                                
-    #     else:
-    #         state[3] = self.input_placer 
-    #     if(len(np.where(np.delete(alpha_strategy_all[-1][:,m]*p_strategy_all[-1],agent)==0)[0])!=self.N-1):
-    #         state[4] = np.log10((self.noise_var+np.matmul(np.delete(H_all_2[sim-1][agent,:,m],agent),
-    #                                         np.delete(alpha_strategy_all[-1][:,m]*p_strategy_all[-1],agent)))/(self.scale_gain))                                
-    #     else:
-    #         state[4] = self.input_placer 
-            
-    #     state[5] = 0.5 * sum_rate_list_distributed_policy[-1][agent,agent,m]
-    #     #interferers
-    #     sorted_interferers = np.argsort(alpha_strategy_all[-1][:,m]*H_all_2[sim-1][agent,:,m])[::-1]
-    #     sorted_interferers = np.delete(sorted_interferers,np.where(sorted_interferers==agent))
-    #     state[(6 + 0 * self.N_neighbors):(6 + 1 * self.N_neighbors)] = np.log10(H_all_2[sim][agent,sorted_interferers[:self.N_neighbors],m]/self.scale_gain_interf)
-    #     state[(6 + 1 * self.N_neighbors):(6 + 2 * self.N_neighbors)] = alpha_strategy_all[-1][sorted_interferers[:self.N_neighbors],m]*p_strategy_all[-1][sorted_interferers[:self.N_neighbors]]
-    #     state[(6 + 2 * self.N_neighbors):(6 + 3 * self.N_neighbors)] = 0.5 * sum_rate_list_distributed_policy[-1][sorted_interferers[:self.N_neighbors],sorted_interferers[:self.N_neighbors],m]
-    #     #interfereds
-    #     sorted_interfereds = np.argsort(alpha_strategy_all[-1][:,m]*H_all_2[sim-1][:,agent,m])[::-1]
-    #     sorted_interfereds = np.delete(sorted_interfereds,np.where(sorted_interfereds==agent))
-    #     state[(6 + 3 * self.N_neighbors):(6 + 4 * self.N_neighbors)] = np.log10(H_all_2[sim-1][sorted_interfereds[:self.N_neighbors],agent,m]/self.scale_gain_interf)
-    #     state[(6 + 4 * self.N_neighbors):(6 + 5 * self.N_neighbors)] = np.log10(self.prev_suminterferences[sorted_interfereds[:self.N_neighbors],m]/self.scale_gain)
-    #     state[(6 + 5 * self.N_neighbors):(6 + 6 * self.N_neighbors)] = 0.5 * sum_rate_list_distributed_policy[-1][sorted_interfereds[:self.N_neighbors],sorted_interfereds[:self.N_neighbors],m]      
-    #     state[(6 + 6 * self.N_neighbors):(6 + 7 * self.N_neighbors)] = np.log10(H_all_2[sim-1][sorted_interfereds[:self.N_neighbors],sorted_interfereds[:self.N_neighbors],m]/self.scale_gain)
-    #     # if PFS 
-    #     if self.pfs:
-    #         state[6 + 7 * self.N_neighbors] = 0.5 / weights[-1][agent]
-    #         state[(7 + 7 * self.N_neighbors):(7 + 8 * self.N_neighbors)] = 0.5 / weights[-1][sorted_interferers[:self.N_neighbors]]
-    #         state[(7 + 8 * self.N_neighbors):(7 + 9 * self.N_neighbors)] = 0.5 / weights[-1][sorted_interfereds[:self.N_neighbors]]
-    #     return state
-        
-    # def local_state_singlechannel(self,sim,agent,m,alpha_strategy_all,p_strategy_all,H_all_2,neighbors,neighbors_in,sum_rate_list_distributed_policy,sims_pos_p):
-    #     current_experiences = np.zeros(self.DDPGnum_input)
-    #     if(p_strategy_all[-1][agent]==0):
-    #         current_experiences[0] = 0.0
-    #     else:
-    #         current_experiences[0] = (alpha_strategy_all[-1][agent,m]*p_strategy_all[-1][agent])/self.Pmax
-    #     current_experiences[1] = np.log10(H_all_2[sim][agent,:,m][agent]/self.scale_gain)
-        
-    #     current_experiences[2] = np.log10(H_all_2[sim-1][agent,:,m][agent]/self.scale_gain)
-    #     current_experiences[3] = 0.5 * sum_rate_list_distributed_policy[-1].diagonal()[agent] # maximum value of sum-rate is around 10, so we wanna slightly reduce for better performance.
-    #     if(len(np.where(np.delete(alpha_strategy_all[-2][:,m]*p_strategy_all[-2],agent)==0)[0])!=self.N-1):
-    #         current_experiences[4] = np.log10((self.noise_var+np.matmul(np.delete(H_all_2[sim-2][agent,:,m],agent),
-    #                                        np.delete(alpha_strategy_all[-2][:,m]*p_strategy_all[-2],agent)))/(self.scale_gain))
-    #     else:
-    #         current_experiences[4] = self.input_placer
-    #     if(len(np.where(np.delete(alpha_strategy_all[-1][:,m]*p_strategy_all[-1],agent)==0)[0])!=self.N-1):
-    #         current_experiences[5] = np.log10((self.noise_var+np.matmul(np.delete(H_all_2[sim-1][agent,:,m],agent),
-    #                                        np.delete(alpha_strategy_all[-1][:,m]*p_strategy_all[-1],agent)))/(self.scale_gain))                                
-    #     else:
-    #         current_experiences[5] = self.input_placer      
-    #     if(len(self.tmp_exp_type_1[agent]) == 0):
-    #         if(len(neighbors_in[-2][agent]) != 0):
-    #             self.tmp_exp_type_1[agent].append(np.log10(np.multiply(H_all_2[sim-2][agent,neighbors_in[-2][agent],m],alpha_strategy_all[-2][neighbors_in[-2][agent],m]*p_strategy_all[-2][neighbors_in[-2][agent]])/(self.scale_gain_interf)))
-                
-    #             tmp_exp_type_1_index = np.argsort(self.tmp_exp_type_1[agent][-1])[::-1]
-    #             self.tmp_exp_type_1[agent][-1] = self.tmp_exp_type_1[agent][-1][tmp_exp_type_1_index]
-    #             self.tmp_exp_type_1[agent].append(0.5 * sum_rate_list_distributed_policy[-2].diagonal()[neighbors_in[-2][agent]][tmp_exp_type_1_index])
-    #         else:
-    #             self.tmp_exp_type_1[agent].append(np.array([]))
-    #             self.tmp_exp_type_1[agent].append(np.array([]))
-    #         # Append negative numbers if needed
-    #         if (len(self.tmp_exp_type_1[agent][-2]) < self.N_neighbors):
-    #             self.tmp_exp_type_1[agent][-2] = np.append(self.tmp_exp_type_1[agent][-2],(self.N_neighbors - len(self.tmp_exp_type_1[agent][-2]))*[self.input_placer])
-    #             self.tmp_exp_type_1[agent][-1] = np.append(self.tmp_exp_type_1[agent][-1],(self.N_neighbors - len(self.tmp_exp_type_1[agent][-1]))*[self.input_placer])
-    #     if(len(neighbors_in[-1][agent]) != 0):
-    #         self.tmp_exp_type_1[agent].append(np.log10(np.multiply(H_all_2[sim-1][agent,neighbors_in[-1][agent],m],alpha_strategy_all[-1][neighbors_in[-1][agent],m]*p_strategy_all[-1][neighbors_in[-1][agent]])/(self.scale_gain_interf)))
-    #         tmp_exp_type_1_index = np.argsort(self.tmp_exp_type_1[agent][-1])[::-1]
-    #         self.tmp_exp_type_1[agent][-1] = self.tmp_exp_type_1[agent][-1][tmp_exp_type_1_index]
-    #         self.tmp_exp_type_1[agent].append(0.5 * sum_rate_list_distributed_policy[-1].diagonal()[neighbors_in[-1][agent]][tmp_exp_type_1_index])
-    #     else:
-    #         self.tmp_exp_type_1[agent].append(np.array([]))
-    #         self.tmp_exp_type_1[agent].append(np.array([]))                   
-    #     # Append negative numbers if needed
-    #     if (len(self.tmp_exp_type_1[agent][-2]) < self.N_neighbors):
-    #         self.tmp_exp_type_1[agent][-2] = np.append(self.tmp_exp_type_1[agent][-2],(self.N_neighbors - len(self.tmp_exp_type_1[agent][-2]))*[self.input_placer])
-    #         self.tmp_exp_type_1[agent][-1] = np.append(self.tmp_exp_type_1[agent][-1],(self.N_neighbors - len(self.tmp_exp_type_1[agent][-1]))*[-1])
-    #     current_experiences[(6 + 0 * self.N_neighbors):(6 + 1 * self.N_neighbors)] = self.tmp_exp_type_1[agent][-1][:self.N_neighbors]
-    #     current_experiences[(6 + 1 * self.N_neighbors):(6 + 2 * self.N_neighbors)] = self.tmp_exp_type_1[agent][-2][:self.N_neighbors]
-    #     current_experiences[(6 + 2 * self.N_neighbors):(6 + 3 * self.N_neighbors)] = self.tmp_exp_type_1[agent][-3][:self.N_neighbors]
-    #     current_experiences[(6 + 3 * self.N_neighbors):(6 + 4 * self.N_neighbors)] = self.tmp_exp_type_1[agent][-4][:self.N_neighbors]
-        
-    #     current_experiences[(6 + 4 * self.N_neighbors):(6 + 5 * self.N_neighbors)] = current_experiences[(6 + 4 * self.N_neighbors):(6 + 5 * self.N_neighbors)] + self.input_placer
-    #     current_experiences[(6 + 5 * self.N_neighbors):(6 + 6 * self.N_neighbors)] = current_experiences[(6 + 5 * self.N_neighbors):(6 + 6 * self.N_neighbors)] + self.input_placer
-    #     current_experiences[(6 + 6 * self.N_neighbors):(6 + 7 * self.N_neighbors)] = current_experiences[(6 + 6 * self.N_neighbors):(6 + 7 * self.N_neighbors)] + self.input_placer
-    #     if(len(neighbors[-1][agent])>0 and alpha_strategy_all[-1][agent,m]*p_strategy_all[-1][agent] != 0):
-    #         self.tmp_exp_type_2[agent].append(np.log10(H_all_2[sim-1][np.array(neighbors[-1][agent]),agent,m]/self.prev_suminterferences[neighbors[-1][agent]]))
-    #         tmp_exp_type_2_index = np.argsort(self.tmp_exp_type_2[agent][-1])[::-1]
-    #         self.tmp_exp_type_2[agent][-1] = self.tmp_exp_type_2[agent][-1][tmp_exp_type_2_index]
-                                    
-    
-    #         self.tmp_exp_type_2[agent].append(np.log10((H_all_2[sim-1][:,:,m].diagonal()[np.array(neighbors[-1][agent])])/self.scale_gain))
-    #         self.tmp_exp_type_2[agent][-1] = self.tmp_exp_type_2[agent][-1][tmp_exp_type_2_index]
-    #         self.tmp_exp_type_2[agent].append(0.5 * sum_rate_list_distributed_policy[-1].diagonal()[neighbors[-1][agent]][tmp_exp_type_2_index])
-            
-    #         if (len(self.tmp_exp_type_2[agent][-2]) < self.N_neighbors):
-    #             self.tmp_exp_type_2[agent][-1] = np.append(self.tmp_exp_type_2[agent][-1],(self.N_neighbors - len(self.tmp_exp_type_2[agent][-1]))*[self.input_placer])
-    #             self.tmp_exp_type_2[agent][-2] = np.append(self.tmp_exp_type_2[agent][-2],(self.N_neighbors - len(self.tmp_exp_type_2[agent][-2]))*[self.input_placer])
-    #             self.tmp_exp_type_2[agent][-3] = np.append(self.tmp_exp_type_2[agent][-3],(self.N_neighbors - len(self.tmp_exp_type_2[agent][-3]))*[self.input_placer])
-    #         current_experiences[(6 + 4 * self.N_neighbors):(6 + 5 * self.N_neighbors)] = self.tmp_exp_type_2[agent][-3][:self.N_neighbors]
-    #         current_experiences[(6 + 5 * self.N_neighbors):(6 + 6 * self.N_neighbors)] = self.tmp_exp_type_2[agent][-2][:self.N_neighbors]
-    #         current_experiences[(6 + 6 * self.N_neighbors):(6 + 7 * self.N_neighbors)] = self.tmp_exp_type_2[agent][-1][:self.N_neighbors]
-    #     elif(sims_pos_p[agent]>0):
-    #         sim_pos_p = sims_pos_p[agent]
-    #         self.tmp_exp_type_2[agent].append(np.log10(H_all_2[sim_pos_p-1][np.array(neighbors[-1][agent]),agent,m]/self.prev_suminterferences[neighbors[-1][agent]]))
-    #         tmp_exp_type_2_index = np.argsort(self.tmp_exp_type_2[agent][-1])[::-1]
-    #         self.tmp_exp_type_2[agent][-1] = self.tmp_exp_type_2[agent][-1][tmp_exp_type_2_index]
-    #         self.tmp_exp_type_2[agent].append(np.log10((H_all_2[sim-1][:,:,m].diagonal()[np.array(neighbors[-1][agent])])/self.scale_gain))
-    #         self.tmp_exp_type_2[agent][-1] = self.tmp_exp_type_2[agent][-1][tmp_exp_type_2_index]
-    #         self.tmp_exp_type_2[agent].append(0.5 * sum_rate_list_distributed_policy[-1].diagonal()[neighbors[-1][agent]][tmp_exp_type_2_index])
-    #         if (len(self.tmp_exp_type_2[agent][-2]) < self.N_neighbors):
-    #             self.tmp_exp_type_2[agent][-1] = np.append(self.tmp_exp_type_2[agent][-1],(self.N_neighbors - len(self.tmp_exp_type_2[agent][-1]))*[self.input_placer])
-    #             self.tmp_exp_type_2[agent][-2] = np.append(self.tmp_exp_type_2[agent][-2],(self.N_neighbors - len(self.tmp_exp_type_2[agent][-2]))*[self.input_placer])
-    #             self.tmp_exp_type_2[agent][-3] = np.append(self.tmp_exp_type_2[agent][-3],(self.N_neighbors - len(self.tmp_exp_type_2[agent][-3]))*[self.input_placer])                      
-    #         current_experiences[(6 + 4 * self.N_neighbors):(6 + 5 * self.N_neighbors)] = self.tmp_exp_type_2[agent][-3][:self.N_neighbors]
-    #         current_experiences[(6 + 5 * self.N_neighbors):(6 + 6 * self.N_neighbors)] = self.tmp_exp_type_2[agent][-2][:self.N_neighbors]
-    #         current_experiences[(6 + 6 * self.N_neighbors):(6 + 7 * self.N_neighbors)] = self.tmp_exp_type_2[agent][-1][:self.N_neighbors]  
-    #     return current_experiences
-    
+
